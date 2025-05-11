@@ -28,7 +28,7 @@ namespace SiemensInternship.Views
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.MainFrame.Navigate(new Dashboard());
         }
     }

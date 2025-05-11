@@ -22,10 +22,10 @@ namespace SiemensInternship.Service
 
             if (activeLoansCount >= selectedBook.Quantity)
             {
-                throw new Exception("Cannot loan Book: Out of stock");
+                throw new LogicalException("Cannot loan Book: Out of stock");
             }
 
-            var loan = new Loan
+            Loan loan = new Loan
             {
                 Book = selectedBook,
                 BookId = selectedBook.Id,
@@ -40,7 +40,7 @@ namespace SiemensInternship.Service
         {
             if (selectedLoan.ReturnDate != null)
             {
-                throw new Exception("Cannot return Book: Already returned");
+                throw new LogicalException("Cannot return Book: Already returned");
             }
 
             selectedLoan.ReturnDate = DateTime.Now;
@@ -53,15 +53,16 @@ namespace SiemensInternship.Service
             if (string.IsNullOrWhiteSpace(text))
             {
                 FilteredBooks.Clear();
-                foreach (var book in Books)
+                foreach (Book book in Books)
                     FilteredBooks.Add(book);
             }
+
             else
             {
-                var lower = text.ToLower();
-                var filtered = Books.Where(b => b.Title.ToLower().Contains(lower));
+                string lower = text.ToLower();
+                IEnumerable<Book> filtered = Books.Where(b => b.Title.ToLower().Contains(lower));
                 FilteredBooks.Clear();
-                foreach (var book in filtered)
+                foreach (Book book in filtered)
                     FilteredBooks.Add(book);
             }
 

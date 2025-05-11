@@ -11,8 +11,8 @@ namespace SiemensInternship.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var projectRoot = Directory.GetParent(Environment.CurrentDirectory).Parent?.Parent?.FullName;
-            var dbPath = Path.Combine(projectRoot, "library.db");
+            string projectRoot = Directory.GetParent(Environment.CurrentDirectory).Parent?.Parent?.FullName;
+            string dbPath = Path.Combine(projectRoot, "library.db");
             optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
     }

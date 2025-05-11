@@ -119,7 +119,7 @@ namespace SiemensInternship.ViewModel
         {
             try
             {
-                var book = await _bookService.AddBookAsync(Title, Author, Quantity);
+                Book book = await _bookService.AddBookAsync(Title, Author, Quantity);
                 Books.Add(book);
                 FilteredBooks.Add(book);
                 _undoStack.Push(new UndoAction { ActionType = UndoActionType.Create, Book = book });
@@ -130,10 +130,17 @@ namespace SiemensInternship.ViewModel
 
                 OnPropertyChanged(nameof(Books));
             }
+            catch (LogicalException ex)
+            {
+                ErrorDialogMessage = ex.Message;
+                ErrorDialogVisibility = "Visible";
+            }
+
             catch (Exception ex)
             {
                 ErrorDialogMessage = ex.Message;
                 ErrorDialogVisibility = "Visible";
+                Console.WriteLine("This shouldn't happen");
             }
         }
 
@@ -148,7 +155,7 @@ namespace SiemensInternship.ViewModel
 
             try
             {
-                var originalState = new Book
+                Book originalState = new Book
                 {
                     Title = SelectedBook.Title,
                     Author = SelectedBook.Author,
@@ -160,7 +167,7 @@ namespace SiemensInternship.ViewModel
                 SelectedBook.Title = Title;
                 SelectedBook.Author = Author;
                 SelectedBook.Quantity = Int32.Parse(Quantity);
-                var updatedState = new Book
+                Book updatedState = new Book
                 {
                     Id = SelectedBook.Id,
                     Title = SelectedBook.Title,
@@ -177,10 +184,17 @@ namespace SiemensInternship.ViewModel
                 Quantity = "";
             }
 
+            catch (LogicalException ex)
+            {
+                ErrorDialogMessage = ex.Message;
+                ErrorDialogVisibility = "Visible";
+            }
+
             catch (Exception ex)
             {
                 ErrorDialogMessage = ex.Message;
                 ErrorDialogVisibility = "Visible";
+                Console.WriteLine("This shouldn't happen");
             }
         }
 
@@ -195,7 +209,7 @@ namespace SiemensInternship.ViewModel
 
             try
             {
-                var bookCopy = new Book
+                Book bookCopy = new Book
                 {
                     Title = SelectedBook.Title,
                     Author = SelectedBook.Author,
@@ -208,10 +222,17 @@ namespace SiemensInternship.ViewModel
                 SelectedBook = null;
             }
 
+            catch (LogicalException ex)
+            {
+                ErrorDialogMessage = ex.Message;
+                ErrorDialogVisibility = "Visible";
+            }
+
             catch (Exception ex)
             {
                 ErrorDialogMessage = ex.Message;
                 ErrorDialogVisibility = "Visible";
+                Console.WriteLine("This shouldn't happen");
             }
         }
 
@@ -236,9 +257,9 @@ namespace SiemensInternship.ViewModel
                 return;
             }
 
-            var lastAction = _undoStack.Pop();
-            var book = lastAction.Book;
-            var previousBook = lastAction.PreviousBook;
+            UndoAction lastAction = _undoStack.Pop();
+            Book book = lastAction.Book;
+            Book previousBook = lastAction.PreviousBook;
 
             try
             {
@@ -256,17 +277,25 @@ namespace SiemensInternship.ViewModel
                         lastAction.Book.Quantity = lastAction.PreviousBook.Quantity;
                         break;
                     case UndoActionType.Delete:
-                        await _bookService.AddBookAsync(book.Title, book.Author, book.Quantity.ToString());
-                        Books.Add(book);
-                        FilteredBooks.Add(book);
+                        Book addedBook = await _bookService.AddBookAsync(book.Title, book.Author, book.Quantity.ToString());
+                        Books.Add(addedBook);
+                        FilteredBooks.Add(addedBook);
                         break;
                 }
+            }
+
+            catch (LogicalException ex)
+            {
+                ErrorDialogMessage = ex.Message;
+                ErrorDialogVisibility = "Visible";
+                return;
             }
 
             catch (Exception ex)
             {
                 ErrorDialogMessage = ex.Message;
                 ErrorDialogVisibility = "Visible";
+                Console.WriteLine("This shouldn't happen");
                 return;
             }
 

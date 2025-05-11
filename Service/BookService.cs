@@ -19,17 +19,17 @@ namespace SiemensInternship.Service
             ValidateFields(title, author, quantity);
 
             int quantityInt = Int32.Parse(quantity);
-            var existing = await _libraryContext.Books.FirstOrDefaultAsync(b => b.Title.ToLower().Equals(title.ToLower()) &&
+            Book? existing = await _libraryContext.Books.FirstOrDefaultAsync(b => b.Title.ToLower().Equals(title.ToLower()) &&
                 b.Author.ToLower().Equals(author.ToLower()));
 
             if (existing != null)
             {
-                throw new Exception("Book with given title and author already exists");
+                throw new LogicalException("Book with given title and author already exists");
             }
 
             else
             {
-                var newBook = new Book
+                Book newBook = new Book
                 {
                     Author = author,
                     Title = title,
@@ -45,7 +45,7 @@ namespace SiemensInternship.Service
 
         public async Task DeleteBookAsync(int id)
         {
-            var book = await _libraryContext.Books.FindAsync(id);
+            Book? book = await _libraryContext.Books.FindAsync(id);
 
             int numberOfActiveRentals = await _libraryContext.Loans
                 .Where(l => l.BookId == id && l.ReturnDate == null)
@@ -53,7 +53,7 @@ namespace SiemensInternship.Service
 
             if (numberOfActiveRentals > 0)
             {
-                throw new Exception("Cannot delete book: there are active loans");
+                throw new LogicalException("Cannot delete book: there are active loans");
             }
 
             if (book != null)
@@ -64,7 +64,7 @@ namespace SiemensInternship.Service
 
             else
             {
-                throw new Exception("Book doesn't exist");
+                throw new LogicalException("Book doesn't exist");
             }
         }
 
@@ -72,13 +72,13 @@ namespace SiemensInternship.Service
         {
             ValidateFields(newTitle, newAuthor, newQuantity);
 
-            var book = await _libraryContext.Books.FindAsync(id);
+            Book? book = await _libraryContext.Books.FindAsync(id);
             int numberOfActiveRentals = await _libraryContext.Loans.Where(l => l.BookId == id &&
                 l.ReturnDate == null).CountAsync();
 
             if (Int32.Parse(newQuantity) < numberOfActiveRentals)
             {
-                throw new Exception("Cannot modify the quantity to be lower than the number of active rentals");
+                throw new LogicalException("Cannot modify the quantity to be lower than the number of active rentals");
             }
 
             if (book != null)
@@ -92,7 +92,7 @@ namespace SiemensInternship.Service
 
             else
             {
-                throw new Exception("Book doesn't exist");
+                throw new LogicalException("Book doesn't exist");
             }
         }
 
@@ -101,15 +101,16 @@ namespace SiemensInternship.Service
             if (string.IsNullOrWhiteSpace(text))
             {
                 FilteredBooks.Clear();
-                foreach (var book in Books)
+                foreach (Book book in Books)
                     FilteredBooks.Add(book);
             }
             else
             {
-                var lower = text.ToLower();
-                var filtered = Books.Where(b => b.Title.ToLower().Contains(lower));
+                string lower = text.ToLower();
+                IEnumerable<Book> filtered = Books.Where(b => b.Title.ToLower().Contains(lower)
+                || b.Author.ToLower().Contains(lower));
                 FilteredBooks.Clear();
-                foreach (var book in filtered)
+                foreach (Book book in filtered)
                     FilteredBooks.Add(book);
             }
 
@@ -120,19 +121,19 @@ namespace SiemensInternship.Service
         {
             if (string.IsNullOrEmpty(title))
             {
-                throw new Exception("Title can't be empty");
+                throw new LogicalException("Title can't be empty");
             }
 
             if (string.IsNullOrEmpty(author))
             {
-                throw new Exception("Author can't be empty");
+                throw new LogicalException("Author can't be empty");
             }
 
             int quantityInt = -1;
             bool ok = Int32.TryParse(quantity, out quantityInt);
 
             if (!ok || quantityInt <= 0)
-                throw new Exception("Quantity has to be a positive integer");
+                throw new LogicalException("Quantity has to be a positive integer");
         }
 
         public async Task<List<Book>> LoadBooksAsync()

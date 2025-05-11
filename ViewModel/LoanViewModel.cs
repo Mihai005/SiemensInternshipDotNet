@@ -83,10 +83,17 @@ namespace SiemensInternship.ViewModel
                 OnPropertyChanged(nameof(Loans));
             }
 
+            catch (LogicalException ex)
+            {
+                ErrorDialogMessage = ex.Message;
+                ErrorDialogVisibility = "Visible";
+                return;
+            }
             catch (Exception ex)
             {
                 ErrorDialogMessage = ex.Message;
                 ErrorDialogVisibility = "Visible";
+                Console.WriteLine("This shouldn't happen;");
                 return;
             }
         }
@@ -107,10 +114,18 @@ namespace SiemensInternship.ViewModel
                 OnPropertyChanged(nameof(Loans));
             }
 
+            catch (LogicalException ex)
+            {
+                ErrorDialogMessage = ex.Message;
+                ErrorDialogVisibility = "Visible";
+                return;
+            }
+
             catch (Exception ex)
             {
                 ErrorDialogMessage = ex.Message;
                 ErrorDialogVisibility = "Visible";
+                Console.WriteLine("This shouldn't happen;");
                 return;
             }
         }
