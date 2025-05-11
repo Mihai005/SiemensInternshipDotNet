@@ -15,13 +15,11 @@ namespace SiemensInternship.Views
 
         private void ManageBooksButton_Clicked(object sender, RoutedEventArgs e)
         {
-            // MainFrame.Content = new BookCrudPage();
             NavigationService.Navigate(new BookCrudPage());
         }
 
         private void ManageLoansButton_Clicked(object sender, RoutedEventArgs e)
         {
-            //  MainFrame.Content = new LoanPage();
             NavigationService.Navigate(new LoanPage());
         }
     }

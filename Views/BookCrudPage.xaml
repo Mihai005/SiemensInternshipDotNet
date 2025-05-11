@@ -13,25 +13,18 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Search -->
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
-            <!-- Form -->
             <RowDefinition Height="Auto"/>
-            <!-- Buttons -->
             <RowDefinition Height="*"/>
-            <!-- ListView -->
         </Grid.RowDefinitions>
 
         <Button Content="Go Back" Margin="5" Click="GoBack_Click" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-        <!-- Form Inputs -->
         <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
-            <!-- Title -->
             <Grid>
                 <TextBox Width="250" Margin="5"
                          Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
                          x:Name="TitleTextBox" HorizontalAlignment="Left" />
-                <!-- Placeholder text for Title -->
                 <TextBlock IsHitTestVisible="False" Text="Enter Title" 
                            VerticalAlignment="Center" HorizontalAlignment="Left"
                            Foreground="DarkGray" Margin="10,0,0,0">
@@ -48,12 +41,10 @@
                 </TextBlock>
             </Grid>
 
-            <!-- Author -->
             <Grid>
                 <TextBox Width="250" Margin="5"
                          Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}"
                          x:Name="AuthorTextBox" HorizontalAlignment="Left"/>
-                <!-- Placeholder text for Author -->
                 <TextBlock IsHitTestVisible="False" Text="Enter Author" 
                            VerticalAlignment="Center" HorizontalAlignment="Left" 
                            Foreground="DarkGray" Margin="10,0,0,0">
@@ -70,12 +61,10 @@
                 </TextBlock>
             </Grid>
 
-            <!-- Quantity -->
             <Grid>
                 <TextBox Width="250" Margin="5"
                          Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
                          x:Name="QuantityTextBox" HorizontalAlignment="Left"/>
-                <!-- Placeholder text for Quantity -->
                 <TextBlock IsHitTestVisible="False" Text="Enter Quantity" 
                            VerticalAlignment="Center" HorizontalAlignment="Left" 
                            Foreground="DarkGray" Margin="10,0,0,0">
@@ -93,7 +82,6 @@
             </Grid>
         </StackPanel>
 
-        <!-- Buttons -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
             <Button Content="Add Book" Width="100" Margin="0,0,10,0" Command="{Binding AddCommand}" />
             <Button Content="Update Book" Width="100" Margin="0,0,10,0" Command="{Binding UpdateCommand}" />
@@ -101,14 +89,12 @@
             <Button Content="Undo" Width="100" Command="{Binding UndoCommand}" />
         </StackPanel>
 
-        <!-- Search -->
         <Grid Grid.Row="3">
             <Grid>
                 <TextBox Width="250"
                          Margin="0,100,0,10"
                          Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                          x:Name="SearchTextBox" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <!-- Placeholder text for Search -->
                 <TextBlock IsHitTestVisible="False" Text="Search by title or author..." 
                            VerticalAlignment="Center" HorizontalAlignment="Center" 
                            Foreground="DarkGray" Margin="-100,100,0,10">
@@ -126,7 +112,6 @@
             </Grid>
         </Grid>
         
-        <!-- Book List -->
         <ListView Grid.Row="4"
                   ItemsSource="{Binding FilteredBooks}"
                   SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
@@ -140,7 +125,6 @@
             </ListView.View>
         </ListView>
 
-        <!-- Error Dialog -->
             <StackPanel Grid.Row="2" Visibility="{Binding ErrorDialogVisibility}" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" >
                 <TextBlock Foreground="Red"
                            Text="{Binding ErrorDialogMessage}"

@@ -14,7 +14,6 @@
         <GroupBox Header="Loan Management" Margin="0,20,0,0">
             <StackPanel>
 
-                <!-- Search box -->
                 <Grid Margin="0,0,0,10">
                     <TextBox Width="250"
                          Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -76,7 +75,6 @@
             </StackPanel>
         </GroupBox>
 
-        <!-- Error Dialog -->
         <StackPanel Visibility="{Binding ErrorDialogVisibility}" Background="White" Height="52" Margin="278,365,365,33">
             <TextBlock Foreground="Red"
                    Text="{Binding ErrorDialogMessage}"
